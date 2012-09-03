@@ -528,11 +528,11 @@ function getAppScript(program) {
     program.args = execOptions.concat(program.args);
   }
 
-  if (program.options.exec === 'node' && program.ext == '.coffee') {
-    program.options.exec = 'coffee';
+  if (program.options.exec === 'node' && (program.ext == '.coffee' || program.ext == '.iced')) {
+    program.options.exec = 'iced';
   }
 
-  if (program.options.exec === 'coffee') {
+  if (program.options.exec === 'iced') {
     if (hokeycokey) {
       program.args.push(program.args.shift());
     }
@@ -543,8 +543,8 @@ function getAppScript(program) {
       program.args.splice(debugIndex, 0, '--nodejs');
     }
     // monitor both types - TODO possibly make this an option?
-    program.ext = '.coffee|.js';
-    if (!program.options.exec || program.options.exec == 'node') program.options.exec = 'coffee';
+    program.ext = '.coffee|.js|.iced';
+    if (!program.options.exec || program.options.exec == 'node') program.options.exec = 'iced';
 
     // because windows can't find 'coffee', it needs the real file 'coffee.cmd'
     if (isWindows) program.options.exec += '.cmd';
@@ -651,7 +651,7 @@ if (program.options.delay) {
 
 // this is the default - why am I making it a cmd line opt?
 if (program.options.js) {
-  addIgnoreRule('^((?!\.js|\.coffee$).)*$', true); // ignores everything except JS
+  addIgnoreRule('^((?!\.js|\.iced|\.coffee$).)*$', true); // ignores everything except JS
 }
 
 if (program.options.watch && program.options.watch.length > 0) {
@@ -691,7 +691,7 @@ exists(ignoreFilePath, function (exist) {
         if (ext) {
           addIgnoreRule('^((?!' + ext + '$).)*$', true);
         } else {
-          addIgnoreRule('^((?!\.js|\.coffee$).)*$', true); // ignores everything except JS
+          addIgnoreRule('^((?!\.js|\.coffee|\.coffee$).)*$', true); // ignores everything except JS
         }
       }
     });
